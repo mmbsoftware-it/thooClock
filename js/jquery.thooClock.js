@@ -69,8 +69,8 @@
 
             el.onEverySecond = settings.onEverySecond;
 
-            x=0; //loopCounter for Alarm
-            
+			timerId=undefined;
+			
             cnv = document.createElement('canvas');
             ctx = cnv.getContext('2d');
 
@@ -114,6 +114,14 @@
                     startClock(0,0);
                     $(el).trigger('offAlarm');
             };
+		
+			$.fn.thooClock.destroy = function(){
+					if(timerId!==undefined){
+						clearTimeout(timerId);
+					}
+					$(el).off();
+					$(cnv).remove();
+			};
         
 
             function toRadians(deg){
@@ -377,8 +385,6 @@
            		});
 			}
 
-            y=0;
-
             function startClock(x,y){
                 var theDate,
                     s,
@@ -435,10 +441,10 @@
                    $(el).trigger('onAlarm');
                 }
                 var synced_delay= 1000 - ((new Date().getTime()) % 1000);
-                setTimeout(function(){startClock(x,y);},synced_delay);
+                timerId=setTimeout(function(){startClock(x,y);},synced_delay);
             }
 
-            startClock(x,y);
+            startClock(0,0);
 
    });//return each this;
   };     
